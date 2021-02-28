@@ -1,6 +1,7 @@
 (require 'package)
 (package-initialize)
-
+;;init shortcut
+(global-set-key [f7] (lambda () (interactive) (find-file user-init-file)))
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")
@@ -35,7 +36,14 @@
 ;; (startup-layout)
 
 ;; Start fullscreen (cross-platf)
+
 (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+(add-to-list 'default-frame-alist
+             '(vertical-scroll-bars . nil))
+;;(delete-other-windows)
+;;(desktop-save-mode 1)
+
+
 
 (global-set-key (kbd "M-o") 'ace-window)
 
@@ -78,9 +86,31 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+
+;;THEMES
+
+;;(load-theme 'zenburn t)
+(use-package kaolin-themes
+  :config
+  (load-theme 'kaolin-light t)
+  (kaolin-treemacs-theme))
+
 (set-face-attribute 'default nil :font "Source Code Pro Medium")
 (set-fontset-font t 'latin "Noto Sans")
-(load-theme 'zenburn t)
+
+(electric-pair-mode 1 )
+
+
+;; (use-package tao-theme)
+;; (load-theme 'tao-yang t)
+;; (defun tao-palette () (tao-theme-golden-grayscale-yin-palette))
+;; (tao-theme)
+;; (tao-with-color-variables tao-palette
+;;                           (progn
+;;                             (setq
+;;                              hl-paren-colors (list color-14 color-11 color-9 color-7 color-6)
+;;                              hl-paren-background-colors (list color-4 color-4 color-4 color-4 color-4))))
+
 
 (use-package lsp-mode
   :hook ((c-mode c++-mode dart-mode java-mode json-mode python-mode typescript-mode xml-mode) . lsp)
@@ -169,13 +199,67 @@
   :bind ([remap comment-region] . cmake-ide-compile)
   :init (cmake-ide-setup)
   :config (advice-add 'cmake-ide-compile :after #'my/switch-to-compilation-window))
+
+(require 'windsize)
+(windsize-default-keybindings)
+
+;; (require 'flycheck)
+;; (defun flycheckOnMode () (flycheck-mode t) )
+;; (add-hook 'c++-mode 'flycheckOnMode)
+
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(eval-after-load 'flycheck
+  (if (display-graphic-p)
+      (flycheck-pos-tip-mode)
+    (flycheck-popup-tip-mode)))
+
+
+
+;;(delete-other-windows)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(custom-enabled-themes '(kaolin-light))
+ '(custom-safe-themes
+   '("a5d04a184d259f875e3aedbb6dbbe8cba82885d66cd3cf9482a5969f44f606c0" "6f895d86fb25fac5dd4fcce3aec0fe1d88cf3b3677db18a9607cf7a3ef474f02" "801a567c87755fe65d0484cb2bded31a4c5bb24fd1fe0ed11e6c02254017acb2" "98db748f133d9bb82adf38f8ae7834eefa9eefd6f7ea30909213164e1aa36df6" "7236acec527d58086ad2f1be6a904facc9ca8bf81ed1c19098012d596201b3f1" "b9e406b52f60a61c969f203958f406fed50b5db5ac16c127b86bbddd9d8444f7" "7e5d400035eea68343be6830f3de7b8ce5e75f7ac7b8337b5df492d023ee8483" "4e9e56ec06ede9857c876fea2c44b75dd360cd29a7fe927b706c45f804f7beff" "8f54cfa3f010d83d782fbcdc3a34cdc9dfe23c8515d87ba22d410c033160ad7e" "620b9018d9504f79344c8ef3983ea4e83d209b46920f425240889d582be35881" "0c6a36393d5782839b88e4bf932f20155cb4321242ce75dc587b4f564cb63d90" "e58e0bd0ca1f1a8c1662aeb17c92b7fb49ed564aced96435c64df608ee6ced6d" "e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
+ '(fci-rule-color "#383838")
+ '(initial-buffer-choice nil)
+ '(nrepl-message-colors
+   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(package-selected-packages
-   '(rainbow-delimiters aggressive-indent zenburn-theme use-package-ensure-system-package rust-mode prettier-js lsp-ui google-c-style delight dap-mode company-box cmake-ide cmake-font-lock ccls)))
+   '(flycheck-pos-tip popup flycheck all-the-icons tao-theme kaolin-themes rainbow-delimiters aggressive-indent zenburn-theme use-package-ensure-system-package rust-mode prettier-js lsp-ui google-c-style delight dap-mode company-box cmake-ide cmake-font-lock ccls))
+ '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
+ '(pos-tip-background-color "#16211C")
+ '(pos-tip-foreground-color "#dcded9")
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   '((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3")))
+ '(vc-annotate-very-old-color "#DC8CC3"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
