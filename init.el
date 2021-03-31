@@ -15,12 +15,15 @@
 (use-package use-package-ensure-system-package :ensure t)
 
 
+
 ;;if windowed no toolbar
 (if window-system
     (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (menu-bar-mode -1)
   )
+
+
 ;; (defun startup-layout ()
 ;;   (interactive)
 ;;   ;;(delete-other-windows)
@@ -46,6 +49,7 @@
 
 
 (global-set-key (kbd "M-o") 'ace-window)
+(global-set-key [remap list-buffers] 'ibuffer)
 
 (setq-default
  ad-redefinition-action 'accept                   ; Silence warnings for redefinition
@@ -87,18 +91,46 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 
+(defun split-and-follow-horizontally ()
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+
+(defun split-and-follow-vertically ()
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+
+
+(add-hook 'term-mode-hook
+          (lambda ()
+            ;; C-x is the prefix command, rather than C-c
+            (term-set-escape-char ?\C-x)
+            (define-key term-raw-map "\M-y" 'yank-pop)
+            (define-key term-raw-map "\M-w" 'kill-ring-save)))
 ;;THEMES
 
 ;;(load-theme 'zenburn t)
+;; (use-package kaolin-themes
+;;   :config
+;;   (load-theme 'kaolin-light t)
+;;   (kaolin-treemacs-theme))
+
 (use-package kaolin-themes
   :config
-  (load-theme 'kaolin-light t)
-  (kaolin-treemacs-theme))
+  (load-theme 'kaolin-dark t)
+  )
+
 
 (set-face-attribute 'default nil :font "Source Code Pro Medium")
 (set-fontset-font t 'latin "Noto Sans")
-
+(set-face-attribute 'default nil :height 130)
 (electric-pair-mode 1 )
+(setq visible-bell 1)
 
 
 ;; (use-package tao-theme)
@@ -165,6 +197,11 @@
   :hook (((c-mode c++-mode) . google-set-c-style)
          (c-mode-common . google-make-newline-indent)))
 
+;;compile command set
+(setq compile-command "g++ -o")
+
+
+
 (use-package prettier-js
   :delight
   :custom (prettier-js-args '("--print-width" "100"
@@ -200,9 +237,6 @@
   :init (cmake-ide-setup)
   :config (advice-add 'cmake-ide-compile :after #'my/switch-to-compilation-window))
 
-(require 'windsize)
-(windsize-default-keybindings)
-
 ;; (require 'flycheck)
 ;; (defun flycheckOnMode () (flycheck-mode t) )
 ;; (add-hook 'c++-mode 'flycheckOnMode)
@@ -212,6 +246,8 @@
   (if (display-graphic-p)
       (flycheck-pos-tip-mode)
     (flycheck-popup-tip-mode)))
+
+
 
 
 
@@ -227,9 +263,9 @@
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes '(kaolin-light))
+ '(custom-enabled-themes '(kaolin-dark))
  '(custom-safe-themes
-   '("a5d04a184d259f875e3aedbb6dbbe8cba82885d66cd3cf9482a5969f44f606c0" "6f895d86fb25fac5dd4fcce3aec0fe1d88cf3b3677db18a9607cf7a3ef474f02" "801a567c87755fe65d0484cb2bded31a4c5bb24fd1fe0ed11e6c02254017acb2" "98db748f133d9bb82adf38f8ae7834eefa9eefd6f7ea30909213164e1aa36df6" "7236acec527d58086ad2f1be6a904facc9ca8bf81ed1c19098012d596201b3f1" "b9e406b52f60a61c969f203958f406fed50b5db5ac16c127b86bbddd9d8444f7" "7e5d400035eea68343be6830f3de7b8ce5e75f7ac7b8337b5df492d023ee8483" "4e9e56ec06ede9857c876fea2c44b75dd360cd29a7fe927b706c45f804f7beff" "8f54cfa3f010d83d782fbcdc3a34cdc9dfe23c8515d87ba22d410c033160ad7e" "620b9018d9504f79344c8ef3983ea4e83d209b46920f425240889d582be35881" "0c6a36393d5782839b88e4bf932f20155cb4321242ce75dc587b4f564cb63d90" "e58e0bd0ca1f1a8c1662aeb17c92b7fb49ed564aced96435c64df608ee6ced6d" "e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
+   '("dbade2e946597b9cda3e61978b5fcc14fa3afa2d3c4391d477bdaeff8f5638c5" "73320ccc14ab4987fe2e97cfd810b33a1f4a115f5f056c482c3d38a4429e1705" "c9415c9f5a5ed67914d1d64a0ea7d743ef93516f1f2c8501bc5ffb87af2066d3" "a4395e069de3314001de4e139d6a3b1a83dcf9c3fdc68ee7b13eef6c2cba4ae3" "d9a28a009cda74d1d53b1fbd050f31af7a1a105aa2d53738e9aa2515908cac4c" "78c01e1b7f3dc9e47bdd48f74dc98dc1a345c291f83b68ac8a1b40191f24d658" "a5d04a184d259f875e3aedbb6dbbe8cba82885d66cd3cf9482a5969f44f606c0" "6f895d86fb25fac5dd4fcce3aec0fe1d88cf3b3677db18a9607cf7a3ef474f02" "801a567c87755fe65d0484cb2bded31a4c5bb24fd1fe0ed11e6c02254017acb2" "98db748f133d9bb82adf38f8ae7834eefa9eefd6f7ea30909213164e1aa36df6" "7236acec527d58086ad2f1be6a904facc9ca8bf81ed1c19098012d596201b3f1" "b9e406b52f60a61c969f203958f406fed50b5db5ac16c127b86bbddd9d8444f7" "7e5d400035eea68343be6830f3de7b8ce5e75f7ac7b8337b5df492d023ee8483" "4e9e56ec06ede9857c876fea2c44b75dd360cd29a7fe927b706c45f804f7beff" "8f54cfa3f010d83d782fbcdc3a34cdc9dfe23c8515d87ba22d410c033160ad7e" "620b9018d9504f79344c8ef3983ea4e83d209b46920f425240889d582be35881" "0c6a36393d5782839b88e4bf932f20155cb4321242ce75dc587b4f564cb63d90" "e58e0bd0ca1f1a8c1662aeb17c92b7fb49ed564aced96435c64df608ee6ced6d" "e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(fci-rule-color "#383838")
  '(initial-buffer-choice nil)
  '(nrepl-message-colors
