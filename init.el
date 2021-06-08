@@ -193,6 +193,9 @@
            projectile-project-root-files-top-down-recurring))
   :config (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 (use-package google-c-style
   :hook (((c-mode c++-mode) . google-set-c-style)
          (c-mode-common . google-make-newline-indent)))
@@ -242,14 +245,60 @@
 ;; (add-hook 'c++-mode 'flycheckOnMode)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
+(setq flycheck-gcc-include-path '("/Users/lucashui/audioDev/JUCE/modules"))
 (eval-after-load 'flycheck
   (if (display-graphic-p)
       (flycheck-pos-tip-mode)
     (flycheck-popup-tip-mode)))
 
+;;supercollider stuff
+
+;; (add-to-list 'load-path "~/audioDev/SuperCollider-src/editors/sc-el/el")
+;; (require 'sclang)
+
+;; (add-to-list 'load-path "~/.emacs.d")
+;; (require 'sclang)
 
 
+;;rtags
+;; (use-package rtags
+;;   :ensure t
+;;   :hook (c++-mode . rtags-start-process-unless-running)
+;;   :config (setq rtags-completions-enabled t
+;; 		        ;;rtags-path "/home/manoj/.emacs.d/rtags/src/rtags.el"
+;;                 rtags-path "/Users/lucashui/.emacs.d/rtags/src"
+;; 		        rtags-rc-binary-name "/Users/lucashui/.emacs.d/rtags/bin/rc"
+;; 		        rtags-use-helm t
+;; 		        rtags-rdm-binary-name "/Users/lucashui/.emacs.d/rtags/bin/rdm")
+;;   :bind (("C-c E" . rtags-find-symbol)
+;;   	     ("C-c e" . rtags-find-symbol-at-point)
+;;   	     ("C-c O" . rtags-find-references)
+;;   	     ("C-c o" . rtags-find-references-at-point)
+;;   	     ("C-c s" . rtags-find-file)
+;;   	     ("C-c v" . rtags-find-virtuals-at-point)
+;;   	     ("C-c F" . rtags-fixit)
+;;   	     ("C-c f" . rtags-location-stack-forward)
+;;   	     ("C-c b" . rtags-location-stack-back)
+;;   	     ("C-c n" . rtags-next-match)
+;;   	     ("C-c p" . rtags-previous-match)
+;;   	     ("C-c P" . rtags-preprocess-file)
+;;   	     ("C-c R" . rtags-rename-symbol)
+;;   	     ("C-c x" . rtags-show-rtags-buffer)
+;;   	     ("C-c T" . rtags-print-symbol-info)
+;;   	     ("C-c t" . rtags-symbol-type)
+;;   	     ("C-c I" . rtags-include-file)
+;;   	     ("C-c i" . rtags-get-include-file-for-symbol)))
 
+;; (require 'rtags)
+;; (cmake-ide-setup)
+;; (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+;; (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+
+;; (setq rtags-display-result-backend 'helm)
+
+
+;; (setenv "PATH" (concat (getenv "PATH") "/Users/lucashui/audioDev/SuperCollider/SuperCollider.app/Contents"))
+;; (setq exec-path (append exec-path '("//Users/lucashui/audioDev/SuperCollider"  "/Users/lucashui/audioDev/SuperCollider/SuperCollider.app/Contents" )))
 
 ;;(delete-other-windows)
 (custom-set-variables
@@ -271,7 +320,7 @@
  '(nrepl-message-colors
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(package-selected-packages
-   '(flycheck-pos-tip popup flycheck all-the-icons tao-theme kaolin-themes rainbow-delimiters aggressive-indent zenburn-theme use-package-ensure-system-package rust-mode prettier-js lsp-ui google-c-style delight dap-mode company-box cmake-ide cmake-font-lock ccls))
+   '(rtags el-get flycheck-pos-tip popup flycheck all-the-icons tao-theme kaolin-themes rainbow-delimiters aggressive-indent zenburn-theme use-package-ensure-system-package rust-mode prettier-js lsp-ui google-c-style delight dap-mode company-box cmake-ide cmake-font-lock ccls))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(pos-tip-background-color "#16211C")
  '(pos-tip-foreground-color "#dcded9")
